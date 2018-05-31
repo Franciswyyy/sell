@@ -29,12 +29,8 @@ public class ProductCategory {
 
     private Date updateTime;
 
-    @Override
-    public String toString() {
-        return "ProductCategory{" +
-                "categoryId=" + categoryId +
-                ", categoryName='" + categoryName + '\'' +
-                ", categoryType=" + categoryType +
-                '}';
+    public ProductCategory(String categoryName, Integer categoryType) {
+        this.categoryName = categoryName;
+        this.categoryType = categoryType;
     }
 }
