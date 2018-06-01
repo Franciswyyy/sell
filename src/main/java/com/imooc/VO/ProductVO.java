@@ -13,7 +13,7 @@ public class ProductVO {
     //这样写为了后端能清楚分辨，而注释为是了的返回给前端是name，前后端是有规范的
 
     @JsonProperty("type")
-    private String categoryType;
+    private Integer categoryType;
 
     @JsonProperty("foods")
     private List<ProductInfoVO> productInfoVOList;
