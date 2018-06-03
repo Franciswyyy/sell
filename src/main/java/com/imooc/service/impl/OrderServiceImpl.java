@@ -5,6 +5,8 @@ import com.imooc.dataobject.OrderMaster;
 import com.imooc.dataobject.ProductInfo;
 import com.imooc.dto.CartDTO;
 import com.imooc.dto.OrderDTO;
+import com.imooc.enums.OrderStatusEnum;
+import com.imooc.enums.PayStatusEnum;
 import com.imooc.enums.ResultEnum;
 import com.imooc.exception.SellException;
 import com.imooc.repository.OrderDetailRepository;
@@ -54,7 +56,7 @@ public class OrderServiceImpl implements OrderService{
                 throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
             }
             //2. 计算订单总价
-            orderAmount = orderDetail.getProductPrice()
+            orderAmount = productInfo.getProductPrice()
                     .multiply(new BigDecimal(orderDetail.getProductQuantity()))
                     .add(orderAmount);
 
@@ -69,10 +71,13 @@ public class OrderServiceImpl implements OrderService{
         }
 
 
-        //3. 写入订单数据库(orderMaster,orderDetail)
+        //3. 写入订单数据库(orderMaster,orderDetail)   先拷贝，再设置
         OrderMaster orderMaster = new OrderMaster();
-        orderMaster.setOrderId(orderId);
         BeanUtils.copyProperties(orderDTO, orderMaster);
+        orderMaster.setOrderId(orderId);
+        orderMaster.setOrderAmount(orderAmount);
+        orderMaster.setOrderStatus(OrderStatusEnum.NEW.getCode());
+        orderMaster.setPayStatus(PayStatusEnum.WAIT.getCode());
         orderMasterRepository.save(orderMaster);
 
         //4. 扣库存
