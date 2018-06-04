@@ -81,7 +81,11 @@ public class OrderServiceImplTest {
     @Test
     @Transactional
     public void findOne() throws Exception {
-        OrderDTO orderDTO = new OrderDTO();
+
+        OrderDTO result = orderService.findOne(ORDER_ID);
+        log.info("【查询单个订单】result={}", result);
+        Assert.assertEquals(ORDER_ID, result.getOrderId());
+        /* OrderDTO orderDTO = new OrderDTO();
         OrderMaster orderMaster = orderMasterRepository.getOne(ORDER_ID);
 
         if(orderMaster == null){
@@ -95,16 +99,16 @@ public class OrderServiceImplTest {
 
 
         BeanUtils.copyProperties(orderMaster, orderDTO);
-        /*orderDTO.setBuyerName(orderMaster.getBuyerName());
+        *//*orderDTO.setBuyerName(orderMaster.getBuyerName());
         orderDTO.setBuyerAddress(orderMaster.getBuyerAddress());
         orderDTO.setBuyerOpenid(orderMaster.getBuyerOpenid());
         orderDTO.setOrderId(orderMaster.getOrderId());
         orderDTO.setBuyerPhone(orderMaster.getBuyerPhone());
-        orderDTO.setOrderAmount(orderMaster.getOrderAmount());*/
+        orderDTO.setOrderAmount(orderMaster.getOrderAmount());*//*
         orderDTO.setOrderDetailList(orderDetailList);
 
         log.info("【查询单个订单】result={}", orderDTO);
-        Assert.assertEquals(ORDER_ID, orderDTO.getOrderId());
+        Assert.assertEquals(ORDER_ID, orderDTO.getOrderId());*/
     }
 
     @Test
@@ -118,23 +122,32 @@ public class OrderServiceImplTest {
     @Transactional
     public void cancel() throws Exception {
         OrderDTO orderDTO = orderService.findOne(ORDER_ID);
+        log.info("所有的信息1~{}",orderDTO);
         OrderMaster orderMaster = new OrderMaster();
+        log.info("所有的信息2~{}",orderMaster);
         OrderDTO result = orderService.cancel(orderDTO);
-        log.info("所有的信息~{}",result);
+        log.info("所有的信息3~{}",result);
         Assert.assertEquals(OrderStatusEnum.CANCEL.getCode(), orderDTO.getOrderStatus());
     }
 
     @Test
     @Transactional
     public void finish() throws Exception {
-        OrderDTO orderDTO = orderService.findOne(ORDER_ID);
+        OrderDTO orderDTO = orderService.findOne(ORDER_ID);   //正常取出来状态为0
+        log.info("所有的信息1~{}",orderDTO);
         OrderDTO result = orderService.finish(orderDTO);
-        log.error("所有的信息~{}",result);
+        log.info("所有的信息2~{}",result);
         Assert.assertEquals(OrderStatusEnum.FINISHED.getCode(), result.getOrderStatus());
     }
 
     @Test
+    @Transactional
     public void paid() throws Exception {
+        OrderDTO orderDTO = orderService.findOne(ORDER_ID);
+        log.info("所有的信息1~{}",orderDTO);
+        OrderDTO result = orderService.paid(orderDTO);
+        log.info("所有的信息是2{}", result);
+        Assert.assertEquals(PayStatusEnum.SUCCESS.getCode(), result.getPayStatus());
     }
 
 }
