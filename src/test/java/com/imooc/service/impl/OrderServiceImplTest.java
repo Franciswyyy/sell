@@ -122,11 +122,7 @@ public class OrderServiceImplTest {
     @Transactional
     public void cancel() throws Exception {
         OrderDTO orderDTO = orderService.findOne(ORDER_ID);
-        log.info("所有的信息1~{}",orderDTO);
-        OrderMaster orderMaster = new OrderMaster();
-        log.info("所有的信息2~{}",orderMaster);
         OrderDTO result = orderService.cancel(orderDTO);
-        log.info("所有的信息3~{}",result);
         Assert.assertEquals(OrderStatusEnum.CANCEL.getCode(), orderDTO.getOrderStatus());
     }
 
