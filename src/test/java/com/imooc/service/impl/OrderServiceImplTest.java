@@ -2,11 +2,15 @@ package com.imooc.service.impl;
 
 import com.imooc.dataobject.OrderDetail;
 import com.imooc.dataobject.OrderMaster;
+import com.imooc.dto.CartDTO;
 import com.imooc.dto.OrderDTO;
+import com.imooc.enums.OrderStatusEnum;
+import com.imooc.enums.PayStatusEnum;
 import com.imooc.enums.ResultEnum;
 import com.imooc.exception.SellException;
 import com.imooc.repository.OrderDetailRepository;
 import com.imooc.repository.OrderMasterRepository;
+import com.imooc.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,6 +26,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -37,6 +42,9 @@ public class OrderServiceImplTest {
 
     @Autowired
     private OrderMasterRepository orderMasterRepository;
+
+    @Autowired
+    private ProductService productService;
 
     private final String BUYER_OPENID = "110111";
 
@@ -107,7 +115,15 @@ public class OrderServiceImplTest {
     }
 
     @Test
+    @Transactional
     public void cancel() throws Exception {
+        OrderDTO orderDTO = orderService.findOne(ORDER_ID);
+
+        OrderMaster orderMaster = new OrderMaster();
+
+        OrderDTO result = orderService.cancel(orderDTO);
+        log.info("所有的信息~{}",result);
+        Assert.assertEquals(OrderStatusEnum.CANCEL.getCode(), orderDTO.getOrderStatus());
     }
 
     @Test
