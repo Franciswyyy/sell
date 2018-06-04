@@ -125,7 +125,12 @@ public class OrderServiceImplTest {
     }
 
     @Test
+    @Transactional
     public void finish() throws Exception {
+        OrderDTO orderDTO = orderService.findOne(ORDER_ID);
+        OrderDTO result = orderService.finish(orderDTO);
+        log.error("所有的信息~{}",result);
+        Assert.assertEquals(OrderStatusEnum.FINISHED.getCode(), result.getOrderStatus());
     }
 
     @Test
