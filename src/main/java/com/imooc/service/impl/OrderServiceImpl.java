@@ -88,7 +88,7 @@ public class OrderServiceImpl implements OrderService{
 
         //4. 扣库存
 
-        //Lambda表达式~~~~~~~~
+        //TODO  Lambda表达式~~~~~~~~
         List<CartDTO> cartDTOList = orderDTO.getOrderDetailList().stream().map( e ->
             new CartDTO(e.getProductId(), e.getProductQuantity())
         ).collect(Collectors.toList());
@@ -129,6 +129,7 @@ public class OrderServiceImpl implements OrderService{
 
         List<OrderDTO> orderDTOList = OrderMaster2OrderDTOConverter.convert(orderMasterPage.getContent());
 
+        //TODO  pageable
         return new PageImpl<OrderDTO>(orderDTOList, pageable, orderMasterPage.getTotalElements());
     }
 
@@ -157,6 +158,8 @@ public class OrderServiceImpl implements OrderService{
             log.error("【取消订单】订单中无商品详情, orderDTO={}", orderDTO);
             throw new SellException(ResultEnum.ORDER_DETAIL_EMPTY);
         }
+
+        //TODO  lambda表达式
         List<CartDTO> cartDTOList = orderDTO.getOrderDetailList().stream()
                 .map(e -> new CartDTO(e.getProductId(), e.getProductQuantity()))
                 .collect(Collectors.toList());

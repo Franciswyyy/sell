@@ -46,7 +46,7 @@ public class BuyerProductController {
            for(ProductInfo productInfo : productInfoList){
             categoryTypeList.add(productInfo.getCategoryType());
         }*/
-            //lambda
+            //TODO lambda
         List<Integer> categoryTypeList = productInfoList.stream()
                 .map( e -> e.getCategoryType())
                 .collect(Collectors.toList());

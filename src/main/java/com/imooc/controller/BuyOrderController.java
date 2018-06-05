@@ -69,7 +69,7 @@ public class BuyOrderController {
             log.error("【查询订单列表】openid为空");
             throw new SellException(ResultEnum.PARAM_ERROR);
         }
-
+        //TODO   pageable
         PageRequest request =  new PageRequest(page, size);
         Page<OrderDTO> orderDTOPage = orderService.findList(openid, request);
 
@@ -78,6 +78,15 @@ public class BuyOrderController {
         return ResultVOUtil.success(orderDTOPage.getContent());
     }
     //订单详情
+    @GetMapping("/detail")
+    public ResultVO<OrderDTO> detail(@RequestParam("openid") String openid,
+                                     @RequestParam("orderId") String orderId){
+
+        //TODO   不安全，随便传一个就可以访问了， 需要改进
+        OrderDTO orderDTO = orderService.findOne(orderId);
+        return ResultVOUtil.success(orderDTO);
+    }
+
 
     //取消订单
 }
