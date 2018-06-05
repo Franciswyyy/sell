@@ -89,4 +89,14 @@ public class BuyOrderController {
 
 
     //取消订单
+    @PostMapping("/cancel")
+    public ResultVO<OrderDTO> cancel(@RequestParam("openid") String openid,
+                                     @RequestParam("orderId") String orderId){
+
+        //TODO 不安全的做法，改进
+        OrderDTO orderDTO = orderService.findOne(orderId);
+        orderService.cancel(orderDTO);
+
+        return ResultVOUtil.success();
+    }
 }
