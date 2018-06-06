@@ -23,20 +23,21 @@ import java.net.URLEncoder;
 public class WeChatController {
 
     @Autowired
-    private WxMpService wxMpService;
+    private WxMpService wxMpService;    //Mp是微信公众账号的意思
 
     @GetMapping("/authorize")
     public String authorize(@RequestParam("returnUrl") String returnUrl){
 
         //1. 配置
         //2. 调用方法
-        // 服务器的url 得得到code
+        // 服务器的url 得得到code   项目的地址
         String url = "http://jvabgg.natappfree.cc/sell/weixin/userInfo";                                //TODO  为什么网页url就要encode
         String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, URLEncoder.encode(returnUrl));
+        //上面那句url是重定向的~，即入口的项目地址
         return "redirect:" + redirectUrl;
     }
 
-    //上面的url会跳到下面这个方法上
+    //上面的url会跳到下面这个方法上，这个是获取用户信息
     @GetMapping("/userInfo")
     public String userInfo(@RequestParam("code") String code,
                          @RequestParam("state") String returnUrl){
