@@ -11,3 +11,8 @@ spring:
 server:
   servlet:
     context-path: /sell
+
+
+wechat:
+  mpAppId:  wx30cac9336bb6e1cd
+  mpAppSecret:  84fc3ade9f1fdxxxxxxxxxxxxxx
