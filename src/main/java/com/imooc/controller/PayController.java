@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Map;
+
 @Controller
 @RequestMapping("/pay")
 public class PayController {
@@ -26,7 +28,8 @@ public class PayController {
 
     @GetMapping("/create")
     public ModelAndView create(@RequestParam("orderId") String orderId,
-                       @RequestParam("resturnUrl") String returnUrl){
+                               @RequestParam("resturnUrl") String returnUrl,
+                               Map<String, Object> map){
 
         //1. 查询订单
         OrderDTO orderDTO = orderService.findOne(orderId);
@@ -36,6 +39,9 @@ public class PayController {
 
         //2.发起支付
         PayResponse payResponse = payService.create(orderDTO);
+
+        map.put("payResponse", payResponse);
+        map.put("returnUrl", returnUrl);
 
         return new ModelAndView("/pay/create");
         //TODO 添加了freemarker之后
