@@ -8,4 +8,6 @@ import com.lly835.bestpay.model.PayResponse;
 public interface PayService {
 
     PayResponse create(OrderDTO orderDTO);
+    //异步通知
+    PayResponse notify(String notifyData);
 }
