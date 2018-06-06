@@ -6,12 +6,11 @@ import com.imooc.exception.SellException;
 import com.imooc.service.OrderService;
 import com.imooc.service.PayService;
 import com.lly835.bestpay.model.PayResponse;
+import com.lly835.bestpay.rest.type.Post;
 import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
@@ -45,5 +44,13 @@ public class PayController {
 
         return new ModelAndView("/pay/create");
         //TODO 添加了freemarker之后
+    }
+
+    @PostMapping("/notify")
+    public ModelAndView notify(@RequestBody String notifyDate){
+        payService.notify(notifyDate);
+
+        //返回给微信处理结果
+        return new ModelAndView("pay/success");
     }
 }
