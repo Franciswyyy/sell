@@ -32,9 +32,6 @@ public class WeixinController {
         JSONObject jsonObject = JSONObject.parseObject(response);
         String access_token = jsonObject.getString("access_token");
         log.info("access_token={}", access_token);
-        String openIdUrl = "https://api.weixin.qq.com/sns/userinfo?access_token="+ access_token +"&openid=OPENID&lang=zh_CN";
 
-        String openIdResponse = restTemplate.getForObject(openIdUrl, String.class);
-        log.info("openIdResponse={}", openIdResponse);
     }
 }
