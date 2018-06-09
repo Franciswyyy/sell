@@ -70,7 +70,8 @@ public class BuyOrderController {
             throw new SellException(ResultEnum.PARAM_ERROR);
         }
         //TODO   pageable
-        PageRequest request =  new PageRequest(page, size);
+        //PageRequest request =  new PageRequest(page, size);
+        PageRequest request = PageRequest.of(page, size);
         Page<OrderDTO> orderDTOPage = orderService.findList(openid, request);
 
         //Date 转  Long
