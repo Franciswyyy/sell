@@ -3,7 +3,7 @@ package com.imooc.dto;
 import lombok.Data;
 
 @Data
-public class CartDTO {
+public class  CartDTO {
 
     // 商品id
     private String productId;
