@@ -39,7 +39,7 @@ public class WeChatController {
         return "redirect:" + redirectUrl;
     }
 
-    //重定向的 ,  这个方法可以获取到
+    //重定向的,这个方法可以获取到
     @GetMapping("/userInfo")
     public String userInfo(@RequestParam("code") String code,
                           @RequestParam("state") String returnUrl){
