@@ -2,13 +2,22 @@ package com.imooc.service.impl;
 
 import com.imooc.dto.OrderDTO;
 import com.imooc.service.PayService;
+import com.lly835.bestpay.enums.BestPayTypeEnum;
+import com.lly835.bestpay.model.PayRequest;
+import com.lly835.bestpay.model.PayResponse;
 import com.lly835.bestpay.service.BestPayService;
 import com.lly835.bestpay.service.impl.BestPayServiceImpl;
+import com.lly835.bestpay.utils.JsonUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class PayServiceImpl implements PayService{
+
+    private static final String ORDER_NAME = "微信点餐订单";
 
     @Autowired
     private BestPayServiceImpl bestPayService;
@@ -16,5 +25,16 @@ public class PayServiceImpl implements PayService{
     @Override
     public void create(OrderDTO orderDTO) {
         // 1. 配置  2. 支付
+        PayRequest payRequest = new PayRequest();
+        payRequest.setOpenid(orderDTO.getBuyerOpenid());
+        payRequest.setOrderId(orderDTO.getOrderId());
+        payRequest.setOrderAmount(orderDTO.getOrderAmount().doubleValue());
+        payRequest.setOrderName(ORDER_NAME);
+        payRequest.setPayTypeEnum(BestPayTypeEnum.WXPAY_H5);
+        log.info("【微信支付】发起支付, request={}", JsonUtil.toJson(payRequest));
+
+        PayResponse payResponse = bestPayService.pay(payRequest);
+        log.info("【微信支付】发起支付, response={}", JsonUtil.toJson(payResponse));
+        return payResponse;
     }
 }
