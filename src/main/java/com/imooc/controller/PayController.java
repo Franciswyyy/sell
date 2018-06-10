@@ -47,7 +47,10 @@ public class PayController {
 
 
     @PostMapping("/notify")
-    public void notify(@RequestBody String notifyData){
+    public ModelAndView notify(@RequestBody String notifyData){
         payService.notify(notifyData);
+        // 异步通知后，支付完通知微信支付了，这样就不会再异步通知商户付款了
+        //返回给微信处理结果
+        return new ModelAndView("/pay/success");
     }
 }
