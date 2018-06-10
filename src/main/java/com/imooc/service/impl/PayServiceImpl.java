@@ -2,12 +2,12 @@ package com.imooc.service.impl;
 
 import com.imooc.dto.OrderDTO;
 import com.imooc.service.PayService;
+import com.imooc.utils.JsonUtil;
 import com.lly835.bestpay.enums.BestPayTypeEnum;
 import com.lly835.bestpay.model.PayRequest;
 import com.lly835.bestpay.model.PayResponse;
 import com.lly835.bestpay.service.BestPayService;
 import com.lly835.bestpay.service.impl.BestPayServiceImpl;
-import com.lly835.bestpay.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +35,6 @@ public class PayServiceImpl implements PayService{
 
         PayResponse payResponse = bestPayService.pay(payRequest);
         log.info("【微信支付】发起支付, response={}", JsonUtil.toJson(payResponse));
-        return payResponse;
+
     }
 }
