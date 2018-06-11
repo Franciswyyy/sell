@@ -7,6 +7,7 @@
     <body>
     <div class="container">
         <div class="row clearfix">
+        <#--主要内容content-->
             <div class="col-md-12 column">
                 <table class="table table-bordered">
                     <thead>
@@ -31,8 +32,8 @@
                         <td>${orderDTO.buyerPhone}</td>
                         <td>${orderDTO.buyerAddress}</td>
                         <td>${orderDTO.orderAmount}</td>
-                        <td>if ${orderDTO.orderStatus} == 0</td>
-                        <td>${orderDTO.payStatus}</td>
+                        <td>${orderDTO.getOrderStatusEnum().message}</td>
+                        <td>${orderDTO.getPayStatusEnum().message}</td>
                         <td>${orderDTO.createTime}</td>
                         <td>详情</td>
                         <td>取消</td>
@@ -40,6 +41,32 @@
                     </#list>
                     </tbody>
                 </table>
+            </div>
+
+
+        <#--分页-->
+            <div class="col-md-12 column">
+                <ul class="pagination pull-right">
+                <#if currentPage lte 1>
+                    <li class="disabled"><a href="#">上一页</a></li>
+                <#else>
+                    <li><a href="/sell/seller/order/list?page=${currentPage - 1}&size=${size}">上一页</a></li>
+                </#if>
+
+                <#list 1..orderDTOPage.getTotalPages() as index>
+                    <#if currentPage == index>
+                        <li class="disabled"><a href="#">${index}</a></li>
+                    <#else>
+                        <li><a href="/sell/seller/order/list?page=${index}&size=${size}">${index}</a></li>
+                    </#if>
+                </#list>
+
+                <#if currentPage gte orderDTOPage.getTotalPages()>
+                    <li class="disabled"><a href="#">下一页</a></li>
+                <#else>
+                    <li><a href="/sell/seller/order/list?page=${currentPage + 1}&size=${size}">下一页</a></li>
+                </#if>
+                </ul>
             </div>
         </div>
     </div>
