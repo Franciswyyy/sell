@@ -70,4 +70,11 @@ public class ProductServiceImplTest {
         Assert.assertEquals(ProductStatusEnum.UP,result.getProductStatusEnum());
     }
 
+    @Test
+    @Transactional
+    public void offSale(){
+        ProductInfo result = productService.offSale("123457");
+        Assert.assertEquals(ProductStatusEnum.DOWN,result.getProductStatusEnum());
+    }
+
 }
