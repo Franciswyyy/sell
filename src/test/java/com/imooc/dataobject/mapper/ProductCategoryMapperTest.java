@@ -63,5 +63,10 @@ public class ProductCategoryMapperTest {
     }
 
 
-
+    // 通过xml文件来测试
+    @Test
+    public void selectByCategoryType() {
+        ProductCategory productCategory = mapper.selectByCategoryType(103);
+        Assert.assertNotNull(productCategory);
+    }
 }

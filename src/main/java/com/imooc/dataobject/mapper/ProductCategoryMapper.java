@@ -46,5 +46,5 @@ public interface ProductCategoryMapper {
                              @Param("categoryType") Integer categoryType);
 
 
-
+    ProductCategory selectByCategoryType(Integer categoryType);
 }
