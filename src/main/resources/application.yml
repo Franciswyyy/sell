@@ -31,3 +31,7 @@ project-url:
   wechatMpAuthorize: http://sellwy.s1.natapp.cc
   wechatOpenAuthorize: http://sellwy.s1.natapp.cc
   sell: http://sellwy.s1.natapp.cc
+logging:
+  level:
+    com.imooc.dataobject.mapper: trace    # 通过设置日志级别来打印mybatis语句
+
