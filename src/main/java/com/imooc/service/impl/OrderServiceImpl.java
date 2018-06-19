@@ -105,7 +105,7 @@ public class OrderServiceImpl implements OrderService{
 
 
         // 发送websocket消息
-
+        webSocket.sendMessage(orderDTO.getOrderId());
 
         return orderDTO;
     }
