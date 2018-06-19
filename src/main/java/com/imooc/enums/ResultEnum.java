@@ -25,11 +25,16 @@ public enum ResultEnum {
 
     CART_EMPTY(18, "购物车为空"),
 
+<<<<<<< HEAD
     ORDER_OWNER_ERROR(19, "该订单不属于当前用户"),
+=======
+    ORDER_OWNER_ERROR(19, "该订单不属于当前用于"),
+>>>>>>> 2a9074740b0e391e6da452498abcf549cb8aa7e2
 
     WECHAT_MP_ERROR(20, "微信公众账号方面错误"),
 
     WXPAY_NOTIFY_MONEY_VERIFY_ERROR(21, "微信支付异步通知金额校验不通过"),
+<<<<<<< HEAD
 
     ORDER_CANCEL_SUCCESS(22, "订单取消成功"),
 
@@ -40,6 +45,8 @@ public enum ResultEnum {
     LOGIN_FAIL(25, "登录失败，登录信息不正确"),
 
     LOGOUT_SUCCESS(26, "登出成功"),
+=======
+>>>>>>> 2a9074740b0e391e6da452498abcf549cb8aa7e2
     ;
 
     private Integer code;

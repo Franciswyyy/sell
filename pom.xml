@@ -52,6 +52,7 @@
 		</dependency>
 
 		<dependency>
+<<<<<<< HEAD
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<version>1.2.4</version>
@@ -67,6 +68,11 @@
 			<groupId>cn.springboot</groupId>
 			<artifactId>best-pay-sdk</artifactId>
 			<version>1.1.0</version>
+=======
+			<groupId>com.github.binarywang</groupId>
+			<artifactId>weixin-java-mp</artifactId>
+			<version>3.0.0</version>
+>>>>>>> 2a9074740b0e391e6da452498abcf549cb8aa7e2
 		</dependency>
 
 		<dependency>
@@ -75,6 +81,7 @@
 		</dependency>
 
 		<dependency>
+<<<<<<< HEAD
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
@@ -99,6 +106,11 @@
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter</artifactId>
 			<version>1.2.0</version>
+=======
+			<groupId>cn.springboot</groupId>
+			<artifactId>best-pay-sdk</artifactId>
+			<version>1.1.0</version>
+>>>>>>> 2a9074740b0e391e6da452498abcf549cb8aa7e2
 		</dependency>
 
 		<dependency>

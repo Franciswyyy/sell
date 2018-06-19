@@ -47,7 +47,11 @@
                                 </#list>
                             </select>
                         </div>
+<<<<<<< HEAD
                         <input hidden type="text" name="productId" value="${(productInfo.productId)!''}"><#--id不需要显示，隐藏发送过去-->
+=======
+                        <input hidden type="text" name="productId" value="${(productInfo.productId)!''}">
+>>>>>>> 2a9074740b0e391e6da452498abcf549cb8aa7e2
                         <button type="submit" class="btn btn-default">提交</button>
                     </form>
                 </div>
