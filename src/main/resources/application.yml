@@ -24,6 +24,8 @@ wechat:
   mchKey: 06C56A89949D617xxxxxxxxxxx
   keyPath: /var/weixin_cert/h5.p12
   notifyUrl: http://sellwy.s1.natapp.cc/sell/pay/notify
+  templateId:
+      orderStatus: 8jd1UkHwmIg7H1DFu6trNN2J6pExbwJt6j0sC3Onkb0
 
 project-url:
   wechatMpAuthorize: http://sellwy.s1.natapp.cc
