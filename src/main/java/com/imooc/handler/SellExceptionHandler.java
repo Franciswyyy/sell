@@ -3,13 +3,16 @@ package com.imooc.handler;
 
 import com.imooc.VO.ResultVO;
 import com.imooc.config.ProjectUrlConfig;
+import com.imooc.exception.ResponseBankException;
 import com.imooc.exception.SellException;
 import com.imooc.exception.SellerAuthorizeException;
 import com.imooc.utils.ResultVOUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 // todo   不是很清楚
@@ -37,5 +40,13 @@ public class SellExceptionHandler {
     public ResultVO handleSellerException(SellException e) {
         return ResultVOUtil.error(e.getCode(), e.getMessage());
     }
+
+    // 用于处理返回统一状态码的问题
+    @ExceptionHandler(value = ResponseBankException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public void handleResponseBankException(){
+
+    }
+
 
 }
