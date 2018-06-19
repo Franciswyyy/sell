@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,6 +20,10 @@ public class SellerUserController {
 
     @Autowired
     private SellerService sellerService;
+
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @GetMapping("/login")
     public ModelAndView login(@RequestParam("openid") String openid,
@@ -32,8 +37,10 @@ public class SellerUserController {
             return new ModelAndView("/common/error");
         }
         //2. 设置token至redis
+        redisTemplate.opsForValue().set("abc","fewffwdws");
 
         //3. 设置token至cookie
+        return null;
     }
 
     @GetMapping("/logout")
