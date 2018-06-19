@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Data
 @ConfigurationProperties(prefix = "project-url")
 @Component
-public class ProjectUrl {
+public class ProjectUrlConfig {
 
     /**
      * 微信公众平台授权url
