@@ -13,8 +13,6 @@
 - 模板消息推送
 - 微信支付与退款
 - 卖家订单
-- Vue.js
-
 
 
 
@@ -25,77 +23,67 @@
 卖端通过扫码登录后台管理界面，可以看到展示上架的商品类别，订单详情以及可以下架新增商品。
 
 ## 表结构
-``` sql
--- 类目
-create table `product_category` (
-    `category_id` int not null auto_increment,
-    `category_name` varchar(64) not null comment '类目名字',
-    `category_type` int not null comment '类目编号',
-    `create_time` timestamp not null default current_timestamp comment '创建时间',
-    `update_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
-    primary key (`category_id`),
-    unique key `uqe_category_type` (`category_type`)
-);
-
--- 商品
-create table `product_info` (
-    `product_id` varchar(32) not null,
-    `product_name` varchar(64) not null comment '商品名称',
-    `product_price` decimal(8,2) not null comment '单价',
-    `product_stock` int not null comment '库存',
-    `product_description` varchar(64) comment '描述',
-    `product_icon` varchar(512) comment '小图',
-    `product_status` tinyint(3) DEFAULT '0' COMMENT '商品状态,0正常1下架',
-    `category_type` int not null comment '类目编号',
-    `create_time` timestamp not null default current_timestamp comment '创建时间',
-    `update_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
-    primary key (`product_id`)
-);
-
--- 订单
-create table `order_master` (
-    `order_id` varchar(32) not null,
-    `buyer_name` varchar(32) not null comment '买家名字',
-    `buyer_phone` varchar(32) not null comment '买家电话',
-    `buyer_address` varchar(128) not null comment '买家地址',
-    `buyer_openid` varchar(64) not null comment '买家微信openid',
-    `order_amount` decimal(8,2) not null comment '订单总金额',
-    `order_status` tinyint(3) not null default '0' comment '订单状态, 默认为新下单',
-    `pay_status` tinyint(3) not null default '0' comment '支付状态, 默认未支付',
-    `create_time` timestamp not null default current_timestamp comment '创建时间',
-    `update_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
-    primary key (`order_id`),
-    key `idx_buyer_openid` (`buyer_openid`)
-);
-
--- 订单商品
-create table `order_detail` (
-    `detail_id` varchar(32) not null,
-    `order_id` varchar(32) not null,
-    `product_id` varchar(32) not null,
-    `product_name` varchar(64) not null comment '商品名称',
-    `product_price` decimal(8,2) not null comment '当前价格,单位分',
-    `product_quantity` int not null comment '数量',
-    `product_icon` varchar(512) comment '小图',
-    `create_time` timestamp not null default current_timestamp comment '创建时间',
-    `update_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
-    primary key (`detail_id`),
-    key `idx_order_id` (`order_id`),
-    foreign key(`order_id`) REFERENCES order_master(`order_id`)
-);
-
--- 卖家(登录后台使用, 卖家登录之后可能直接采用微信扫码登录，不使用账号密码)
-create table `seller_info` (
-    `id` varchar(32) not null,
-    `username` varchar(32) not null,
-    `password` varchar(32) not null,
-    `openid` varchar(64) not null comment '微信openid',
-    `create_time` timestamp not null default current_timestamp comment '创建时间',
-    `update_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
-    primary key (`id`)
-) comment '卖家信息表';
+``` 表结构
+product_category(category_id,类目名字，类目编号，创建时间，修改时间)  index ：主键id，类目编号(唯一约束)
+product_info(product_id,商品名字,商品价格,商品库存,描述,小图,商品状态,类目编号)
+order_master(order_id,买家名字,电话,地址,微信openid,订单总金额,订单状态,支付状态)  index:主键id,微信openid
+order_detail(detail_id,order_id,product_id,商品名称,当前价格,数量,小图)  index:主键id,订单id； 外键引用订单
+    主表id，一对多关系
+seller_info(id,username,password,微信openid) comment 卖家信息表
 ```
 
+## 统一返回对象，统一异常处理
+``` 
+定义统一返回ResultVO对象,对后端返回数据做统一处理：
+ResultVO(Code,Msg,Data)
+public static ResultVO success(Object object)
+public static ResultVO success()
+public static ResultVO error(Integer code,String msg)
+
+抛出异常时，如创建订单成功或失败，要返回给前端一个统一的结果，实现一个异常处理类SellerExceptionHandler中，对抛出的
+SellException统一处理
+@ExceptionHandler(value = SellException.class)
+    @ResponseBody
+    public ResultVO handlerSellerException(SellException e){
+        return ResultVOUtil.error(e.getCode(),e.getMessage());
+    }
+``` 
+
+## 微信网页授权
+获取
+
+
+
+## 访问页面
+``` 
+项目的前后端是完全分离的，买家端前端的代码在另一个路径上。
+修改nginx的配置文件，让nginx可以找到前端代码。在nginx根目录下的conf目录下有一个nginx.conf文件，它就是我们要修改的配置文件，
+server {
+        listen       80;
+        server_name  localhost;
+
+        #charset koi8-r;
+
+        #access_log  logs/host.access.log  main;
+
+        location / {
+            root   F:\vuejs-project\dist; #前端资源路径
+            index  index.html index.htm;
+        }
+		location /sell/ {
+			proxy_pass http://127.0.0.1:8080/sell/;
+		}
+双击nginx.exe启动nginx服务器，如果已启动过，命令行进入nginx的根目录，输入nginx -s reload重启nginx服务器。
+浏览器访问：http://127.0.0.1/#/order/，这是会出现空白界面，按F2打开浏览器的开发者工具，在浏览器的控制台输入
+document.cookie='abc123' 向该域名下添加cookie。再次访问：http://127.0.0.1，这时就可以访问到前端界面了。
+``` 
+
+## 手机访问微信公众号访问
+```
+对于手机端微信公众号内访问，还要使用到内网穿透工具，由于微信里不能直接访问ip地址，还要购买域名，还涉及到挺复杂的微信调试。
+这里就不再介绍。可以使用postman这个工具模拟微信点餐下单。访问接口参见controller包下以Buyer开头的类。
+如果想查看微信端的访问效果，可以在微信客户端访问这个链接：http://sell.springboot.cn/
+```
 
 ## 前端代码运行方式
 ``` 
@@ -147,12 +135,9 @@ npm run build
 
 
 
+## 项目展示
+! [](http://pdqnpb4k0.bkt.clouddn.com/4)
+! [](http://pdqnpb4k0.bkt.clouddn.com/6)
 
-! [](http://pdqnpb4k0.bkt.clouddn. com/4)
-! [](http://pdqnpb4k0.bkt.clouddn .com/6)
 
 
-业务逻辑：
-商品详情与商品类目的关系
-
-订单主表与订单详细表的关系
