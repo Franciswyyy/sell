@@ -20,7 +20,9 @@
 
 分为卖家端（管理商品，订单）和买家端（点餐付款）
 买家端通过登录点餐并加入购物车，扫码付款
-卖端通过扫码登录后台管理界面，可以看到展示上架的商品类别，订单详情以及可以下架新增商品。
+卖端通过扫码登录后台管理界面，可以看到展示上下架商品信息，订单信息，商品类目，登出等功能
+买家端和卖家端通过WebSocket通信，当利用postman模拟微信下单，则订单页面就会弹出一个窗口。
+
 
 ## 表结构
 ``` 表结构
@@ -43,10 +45,10 @@ public static ResultVO error(Integer code,String msg)
 抛出异常时，如创建订单成功或失败，要返回给前端一个统一的结果，实现一个异常处理类SellerExceptionHandler中，对抛出的
 SellException统一处理
 @ExceptionHandler(value = SellException.class)
-    @ResponseBody
-    public ResultVO handlerSellerException(SellException e){
-        return ResultVOUtil.error(e.getCode(),e.getMessage());
-    }
+@ResponseBody
+public ResultVO handlerSellerException(SellException e){
+    return ResultVOUtil.error(e.getCode(),e.getMessage());
+}
 ``` 
 
 ## 微信网页授权
@@ -54,7 +56,69 @@ SellException统一处理
 
 
 
-## 访问页面
+## AOP实现身份验证（Token认证）
+
+- 用户未登陆情况下，仍然可以访问商品管理系统的资源，用Spring AOP实现对一些前置处理
+  定义一个SellerAuthorizeAspect，以@Aspect注解，把所有的以Seller开头的Controller声明为切点，但排除SellerUserController，
+  这个Controller就是验证用户登陆的Controller
+```
+    @Pointcut("execution(public * com.imooc.controller.Seller*.*(..))"+
+    "&& !execution(public * com.imooc.controller.SellerUserController.*(..))")
+    public void verify(){}
+```
+
+- 对这个切点做前置处理，登陆后，cookie和Redis应该含有用户的信息，来查询这两个地方，来验证用户是否登陆
+```
+    @Before("verify()")
+    public void doVerify(){
+        ServletRequestAttributes attributes=(ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request=attributes.getRequest();
+
+        //查询cookie
+        Cookie cookie= CookieUtil.get(request,CookieConstant.TOKEN);
+        if (cookie==null){
+            log.warn("【登录校验】Cookie中查不到token");
+            throw new SellerAuthorizeException();
+        }
+
+        //去redis查询
+        String tokenValue=redisTemplate.opsForValue().get(String.format(RedisConstant.TOKEN_PREFIX,cookie.getValue()));
+        if (StringUtils.isEmpty(tokenValue)){
+            log.warn("【登录校验】 Redis中查不到token");
+            throw new SellerAuthorizeException();
+        }
+    }
+```
+
+- 当用户没有登陆，就会抛出一个SellerAuthorizeException异常，是一个自定义异常
+  对这个异常进行捕获后，需要处理，让其重新跳到登陆页面
+```
+public class SellerAuthorizeException extends RuntimeException {}
+
+@ControllerAdvice
+public class SellerExceptionHandler {
+
+    @Autowired
+    private ProjectUrlConfig projectUrlConfig;
+
+    //拦截登录异常
+    //http://sqmax.natapp1.cc/sell/wechat/qrAuthorize?returnUrl=http://sqmax.natapp1.cc/sell/seller/login
+    @ExceptionHandler(value = SellerAuthorizeException.class)
+    public ModelAndView handlerAuthorizeException(){
+        return new ModelAndView("redirect:"
+        .concat(projectUrlConfig.getWechatOpenAuthorize())
+        .concat("/sell/wechat/qrAuthorize")
+        .concat("?returnUrl=")
+        .concat(projectUrlConfig.getSell())
+        .concat("/sell/seller/login"));
+    }
+}
+
+```
+## WebSocket通信
+## 分布式Session
+
+## 访问前端页面
 ``` 
 项目的前后端是完全分离的，买家端前端的代码在另一个路径上。
 修改nginx的配置文件，让nginx可以找到前端代码。在nginx根目录下的conf目录下有一个nginx.conf文件，它就是我们要修改的配置文件，
@@ -135,9 +199,6 @@ npm run build
 
 
 
-## 项目展示
-! [](http://pdqnpb4k0.bkt.clouddn.com/4)
-! [](http://pdqnpb4k0.bkt.clouddn.com/6)
-
-
+## 待提高
+卖家端并没有权限控制；项目中商品和订单并没有分开独立，修改商品会影响到订单部分
 
